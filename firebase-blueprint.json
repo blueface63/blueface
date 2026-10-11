@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with balance and referral metrics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "referralCode": { "type": "string", "maxLength": 32 },
+        "referredBy": { "type": "string", "maxLength": 32 },
+        "balanceKES": { "type": "number" },
+        "rechargeBalanceKES": { "type": "number" },
+        "totalEarningsKES": { "type": "number" },
+        "todayEarningsKES": { "type": "number" },
+        "teamSize": { "type": "number" },
+        "teamCommissionKES": { "type": "number" },
+        "vipLevel": { "type": "number" },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "joinedDate": { "type": "string", "maxLength": 64 },
+        "activeInvestmentsCount": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "phone", "referralCode", "balanceKES", "vipLevel"]
+    },
+    "Investment": {
+      "title": "Investment",
+      "description": "User active or completed mining investment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "planId": { "type": "string", "maxLength": 64 },
+        "planName": { "type": "string", "maxLength": 128 },
+        "mineNumber": { "type": "number" },
+        "investedAmount": { "type": "number" },
+        "dailyIncome": { "type": "number" },
+        "cycleDays": { "type": "number" },
+        "daysElapsed": { "type": "number" },
+        "totalEarned": { "type": "number" },
+        "startDate": { "type": "string", "maxLength": 64 },
+        "nextClaimTime": { "type": "number" },
+        "status": { "type": "string", "enum": ["running", "completed"] },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "planId", "investedAmount", "dailyIncome", "status"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial ledger of deposits, investments, claims and withdrawals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["deposit", "withdrawal", "investment", "daily_income", "referral_bonus", "mission_reward"] },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["completed", "pending", "processing"] },
+        "reference": { "type": "string", "maxLength": 128 },
+        "details": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "userId", "type", "amount", "status", "reference"]
+    },
+    "MpesaRecord": {
+      "title": "MpesaRecord",
+      "description": "M-Pesa STK push and payment receipt records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "checkoutRequestId": { "type": "string", "maxLength": 128 },
+        "merchantRequestId": { "type": "string", "maxLength": 128 },
+        "phoneNumber": { "type": "string", "maxLength": 32 },
+        "amount": { "type": "number" },
+        "tillNumber": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "maxLength": 32 },
+        "reference": { "type": "string", "maxLength": 128 },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "phoneNumber", "amount", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and wallet balances"
+    },
+    "/investments/{investmentId}": {
+      "schema": "Investment",
+      "description": "Active and completed mining contracts"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Account transactions and financial history"
+    },
+    "/mpesa_records/{recordId}": {
+      "schema": "MpesaRecord",
+      "description": "M-Pesa Daraja STK Push audit logs"
+    }
+  }
+}
